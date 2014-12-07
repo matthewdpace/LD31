@@ -1,10 +1,10 @@
 -- Drawing functions
 
-local DrawManager ={}
+local DrawManager = {}
 
 function DrawManager.new()
   local dm = {}
-  
+  x = 20
   setmetatable(dm, {__index = DrawManager})
   
   local width, height, flags = love.window.getMode()
@@ -19,7 +19,7 @@ function DrawManager.new()
   return dm
 end
 
-function DrawManager:resize(self)
+function DrawManager:resize()
   local width, height, flags = love.window.getMode()
   self.w = width
   self.h = height
@@ -40,6 +40,8 @@ function DrawManager:drawBase()
   local buttonBox = {x1 = 650, y1 = 80, x2 = 80, y2 = 450}
   local statusBox = {x1 = 560, y1 = 80, x2 = 80, y2 = 450}
   local displayBox = {x1 = 80, y1 = 80, x2 = 450, y2 = 450}
+  
+  
   love.graphics.clear()
   -- outer border
   love.graphics.setColor(0,0,0)
@@ -55,7 +57,7 @@ function DrawManager:drawBase()
   -- text section
   love.graphics.setColor(0,0,0)
   love.graphics.setFont(mainFont)
-  love.graphics.printf('O2', 560, 90, 80, "center")
+  love.graphics.printf('O2', 560, 90, 90, "center")
   love.graphics.printf('ENGINES', 560,120, 80, "center")
   love.graphics.printf('TORPEDO', 560, 150, 80, "center")
   love.graphics.printf('BARRACKS', 560, 180, 80, "center")

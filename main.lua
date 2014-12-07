@@ -5,6 +5,7 @@
 
 DrawManager = require('src/DrawManager')
 DM = DrawManager.new()
+
 Submarine = require('src/Submarine')
 S = Submarine.new()
 
