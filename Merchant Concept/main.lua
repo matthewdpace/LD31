@@ -6,11 +6,19 @@ Items = require('items')
 Heroes = require('heroes')
 Shop = require('shop')
 Events = require('events')
-
+Menu = require('menu')
 Text = require ('text')
+
+currentDay = {}
+currentHero = {}
+
+heroList = {}
+
+NPCText = {}
 
 function love.load(arg)
   Player = Shop.new()
+  Menu = Menu.new()
   MODE = "INTRO"
   textFunction = Text.intro
   --displayText = TEXTS.intro
@@ -19,16 +27,34 @@ function love.load(arg)
   newsTitleFont = love.graphics.newFont('IHATCS__.ttf', 42)
   newsTextFont = love.graphics.newFont('IHATCS__.ttf', 24)
   --if arg[#arg] == "-debug" then require("mobdebug").start() end
+  NPCText.enabled = true
+  NPCText.text = "This is just a test message"
 end
 
 
 function generateDay()
   -- generate number of heroes who will shop today
-  local heroCnt = math.random(5)
+  currentDay.heroCnt = math.random(5)
   
   -- see if there's any events today
 end
 
+function getOrGenerateHero()
+  local availHeroes = {}
+  
+  for _,v in ipairs(heroList) do
+    if v.isAvailable then
+      table.insert(availHeroes, v)
+    end
+  end
+  
+  if len(availHeroes) > 2 then
+    if math.random(100) > 60 then
+      currentHero = availHeroes[math.random(len(availHeroes))]
+    end
+  end
+  currentHero = Heroes:generateNewHero()
+end
 
 function love.draw()
   --if MODE == 'PLAY' then
@@ -58,8 +84,15 @@ function love.draw()
   --love.graphics.printf(displayText, 20, 520, 1240, 'left')
   textFunction()
 
-
- 
+    -- NPC text box
+  if NPCText.enabled then
+    love.graphics.setFont(menuFont)
+    love.graphics.setColor(120,120,120, 10)
+    love.graphics.rectangle('fill',700, 200, 850, 350)
+    love.graphics.setColor(200,200,200)
+    love.graphics.print(NPCText.text, 760,210)
+  end
+  
 end
 
 
@@ -79,12 +112,20 @@ function love.keyreleased(key, u)
   if key == "return" or key == "kpenter" then
     if MODE == "INTRO" then
       MODE = "NEWDAY"
+      generateDay()
       textFunction = Text.pressEnter
-    end
-  end
-  if MODE == "NEWDAY" then
+    
+  elseif MODE == "NEWDAY" then
     MODE = "PLAY"
     textFunction = Text.none
+    getOrGenerateHero()
+    -- generate a hero to use
+    
+
+  
+  elseif MODE == "PLAY" then
+    Menu:processKey(key)
   end
   
+  end
 end

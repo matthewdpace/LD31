@@ -29,6 +29,8 @@ function text.intro()
 
 end
 
+text.firstNames = {'Antonio', 'Clarise', 'Edgen', "Armok", "Gallahad", "Joan", "Jameson"}
+text.lastNames = {"Anderson", "Smith", "Smythe", "The basher dasher", "of the Sea", "Donger", "Dingleberry"}
 
 
 
