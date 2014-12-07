@@ -70,6 +70,13 @@ function DrawManager:drawBase()
   
   --love.graphics.printf('Engines', (statusBox.x1 + (statusBox.x2/2)), (statusBox.y1 + (statusBox.y2/2)), 1000, "center")
   --love.graphics.printf('O2', (statusBox.x1 + (statusBox.x2/2)+50), (statusBox.y1 + (statusBox.y2/2)), 1000, "center")
+  love.graphics.setColor(15, 20, 80)
+  for _,v in ipairs(BM:getButtons()) do
+    love.graphics.rectangle('fill', v.x1, v.y1, (v.x2-v.x1), (v.y2-v.y1))
+  end
+  
+    -- shit
+  
 end
 
 return DrawManager

@@ -2,9 +2,13 @@
 -- Matthew Pace and Andrew Donato
 -- Last modified 2014-12-06
 
+ButtonManager = require('src/ButtonManager')
+BM = ButtonManager.new()
 
 DrawManager = require('src/DrawManager')
 DM = DrawManager.new()
+
+
 
 Submarine = require('src/Submarine')
 S = Submarine.new()
@@ -26,7 +30,7 @@ function love.load(arg)
   mainFont = love.graphics.newFont('Hyperspace Bold.ttf', 15)
   love.graphics.setBackgroundColor(120,120,120)
   
-  --[[
+  ---[[
   if arg[#arg] == "-debug" then 
     require("mobdebug").start()
   end
@@ -59,6 +63,6 @@ end
 
 function love.mousereleased(mx, my, btn)
   if GAMEMODE == "PLAY" then
-    buttonManager:process(x,y)
+    BM:process(x,y)
   end
 end
