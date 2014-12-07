@@ -2,12 +2,15 @@
 
 
 
-Items = require('items')
-Heroes = require('heroes')
-Shop = require('shop')
-Events = require('events')
-Menu = require('menu')
-Text = require ('text')
+ItemsM = require('items')
+HeroesM = require('heroes')
+ShopM = require('shop')
+EventsM = require('events')
+MenuM = require('menu')
+--Text = require ('text')
+StatesM = require('states')
+
+
 
 currentDay = {}
 currentHero = {}
@@ -17,17 +20,19 @@ heroList = {}
 NPCText = {}
 
 function love.load(arg)
-  Player = Shop.new()
-  Menu = Menu.new()
-  MODE = "INTRO"
-  textFunction = Text.intro
-  --displayText = TEXTS.intro
+
+  if arg[#arg] == "-debug" then 
+    require("mobdebug").start() 
+  end
+
+States = StatesM.new()
+Menu = MenuM.new()
+Shop = ShopM.new()
   love.graphics.setBackgroundColor(120,120,120)
-  menuFont = love.graphics.newFont('Triforce.ttf', 24)
   newsTitleFont = love.graphics.newFont('IHATCS__.ttf', 42)
   newsTextFont = love.graphics.newFont('IHATCS__.ttf', 24)
-  --if arg[#arg] == "-debug" then require("mobdebug").start() end
-  NPCText.enabled = true
+  
+  NPCText.enabled = false
   NPCText.text = "This is just a test message"
 end
 
@@ -48,23 +53,25 @@ function getOrGenerateHero()
     end
   end
   
-  if len(availHeroes) > 2 then
+  if #availHeroes > 2 then
     if math.random(100) > 60 then
       currentHero = availHeroes[math.random(len(availHeroes))]
     end
   end
-  currentHero = Heroes:generateNewHero()
+  local params = {}
+  currentHero = Heroes.new(params)
+  MODE = "GREET"
 end
 
 function love.draw()
-  --if MODE == 'PLAY' then
-    love.graphics.clear()
-    love.graphics.setColor(0,0,0,200)
-    love.graphics.rectangle('fill', 0,500, 1280, 500)
-    love.graphics.setColor(220,220,220)
-    love.graphics.setLineWidth(3)
-    love.graphics.line(0, 500, 1280, 500)  
-  --end
+  ---- Draw Basic Background
+  love.graphics.clear()
+  love.graphics.setColor(0,0,0,200)
+  love.graphics.rectangle('fill', 0,500, 1280, 500)
+  love.graphics.setColor(220,220,220)
+  love.graphics.setLineWidth(3)
+  love.graphics.line(0, 500, 1280, 500)  
+  States:drawCurrentState()
   if MODE == "NEWDAY" then
     -- display news
     -- draw newspaper
@@ -78,11 +85,11 @@ function love.draw()
   end
   
   -- text box
-  
-  love.graphics.setFont(menuFont)
-  love.graphics.setColor(220,220,220)
+
+  --love.graphics.setFont(menuFont)
+  --love.graphics.setColor(220,220,220)
   --love.graphics.printf(displayText, 20, 520, 1240, 'left')
-  textFunction()
+  --textFunction()
 
     -- NPC text box
   if NPCText.enabled then
@@ -97,16 +104,7 @@ end
 
 
 
--- DEBUG
---[[
-function love.keypressed(key, u)
-   --Debug
-   if key == "rctrl" then --set to whatever key you want to use
-      debug.debug()
-   end
-end
 
---]]
 
 function love.keyreleased(key, u)
   if key == "return" or key == "kpenter" then
@@ -115,12 +113,13 @@ function love.keyreleased(key, u)
       generateDay()
       textFunction = Text.pressEnter
     
-  elseif MODE == "NEWDAY" then
-    MODE = "PLAY"
-    textFunction = Text.none
-    getOrGenerateHero()
-    -- generate a hero to use
-    
+    elseif MODE == "NEWDAY" then
+      MODE = "GREET"
+      textFunction = Text.none
+      getOrGenerateHero()
+      -- generate a hero to use
+    elseif MODE == "GREET" then
+      MODE = "PLAY"
 
   
   elseif MODE == "PLAY" then

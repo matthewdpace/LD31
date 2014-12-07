@@ -28,7 +28,15 @@ function Item.generateInventory(params)
     local helm = {}
     helm.type = Item.armor[math.random(2) - 1]
     helm.material = Item.armorMaterials[math.random(len(Item.armorMaterials))]
+    i.head = helm
   end
+  if equipLevel + math.random(25) > 60 then
+    local chest = {}
+    --chest.type = Item.armor[math.random(2) - 1]
+    chest.material = Item.armorMaterials[math.random(len(Item.armorMaterials))]
+    i.chest = chest
+  end
+
 end
 
     

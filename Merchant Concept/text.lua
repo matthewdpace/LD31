@@ -13,21 +13,27 @@ function text.none()
   return
 end
 
-function text.pressEnter()
-  love.graphics.setFont(menuFont)
-  love.graphics.setColor(220,220,220)
-  love.graphics.printf('Press [Enter] to continue!', 300, 580, 620, 'center')
+--function text.pressEnter()
+--  love.graphics.setFont(menuFont)
+--  love.graphics.setColor(220,220,220)
+--  love.graphics.printf('Press [Enter] to continue!', 300, 580, 620, 'center')
+--end
+
+function text:heroGreeting()
+  NPCText.text = curHero.greeting
+  NPCText.enabled = true
+  self.pressEnter()
 end
 
 
-function text.intro()
-  local introText = "Welcome to Untitled game, a Ludum Dare 31 entry.    You play the role of a merchant, buying, selling, and trading wares with the heroic adventurers that wander through your town."
-  love.graphics.setFont(menuFont)
-  love.graphics.setColor(220,220,220)
-  love.graphics.printf(introText, 20, 520, 1240, 'left')
-  love.graphics.printf('Press [Enter] to begin!', 20, 580, 620, 'center')
+--function text.intro()
+--  local introText = "Welcome to Untitled game, a Ludum Dare 31 entry.    You play the role of a merchant, buying, selling, and trading wares with the heroic adventurers that wander through your town."
+--  love.graphics.setFont(menuFont)
+--  love.graphics.setColor(220,220,220)
+--  love.graphics.printf(introText, 20, 520, 1240, 'left')
+--  love.graphics.printf('Press [Enter] to begin!', 20, 580, 620, 'center')
 
-end
+--end
 
 text.firstNames = {'Antonio', 'Clarise', 'Edgen', "Armok", "Gallahad", "Joan", "Jameson"}
 text.lastNames = {"Anderson", "Smith", "Smythe", "The basher dasher", "of the Sea", "Donger", "Dingleberry"}
