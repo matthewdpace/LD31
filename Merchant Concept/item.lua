@@ -6,10 +6,10 @@ local item = {}
 item.superTypes = {'potion', 'armor', 'weapon', 'ammo', 'loot', 'food'}
 item.potionTypes = {'health', 'mana', 'restoration'}
 item.weapons = {'mace', 'axe', 'sword', 'hammer', 'bow', 'crossbow'}
-item.armor = {'head', 'torso', 'shirt', 'boots', 'gloves', 'legs', 'shield'}
+item.armor = {'head', 'torso', 'boots', 'gloves', 'legs', 'shield'}
 item.weaponMaterials = {'copper', 'tin', 'bronze', 'iron', 'steel', 'unobtanium'}
 item.armorMaterials = {'leather', 'copper', 'tin', 'bronze', 'iron', 'steel', 'mithril'}
-item.loot = {'scepter', 'crown', 'amulet', 'ring', 'goblet', 'talisman', 'book', 'trinket', 'trophy', 'tourist crap', '"abstract" sculpture'}
+item.loot = {'scepter', 'crown', 'amulet', 'ring', 'goblet', 'talisman', 'trinket', 'trophy', 'tourist crap', '"abstract" sculpture'}
 
 
 function item.new()
@@ -19,15 +19,43 @@ function item.new()
   s.material = ''
   s.quality = math.random(100)
   s.descriptor = item.getAdjective(s.quality)
-  
-  
+  s:calcValue()
+
   return s
 end
 
 
 
 function item:calcValue()
+  -- these table names are base gold values
+  local five = {'trinket', 'tourist crap', 'leather'}
+  local ten = {'talisman', 'goblet', 'trophy', 'copper', 'tin', 'health', 'mana', 'boots', 'gloves'}
+  local twenty = {'crossbow', 'hammer', 'head', 'crown', 'amulet', 'ring', 'scepter', '"abstract" sculpture', 'head', 'legs', 'restoration'}
+  local thirty = {'mace', 'axe', 'bow', 'iron', 'bronze', 'shield'}
+  local fourty = {'torso', 'sword', 'steel'}
+  local fifty = {'unobtanium'}
   
+  local value = 0
+  
+  local values = {}
+  values[5] = five
+  values[10] = ten
+  values[20] = twenty
+  values[30] = thirty
+  values[40] = fourty
+  values[50] = fifty
+  for i,j in pairs(values) do
+    for k,v in pairs(j) do
+      if self.material == v then
+        value = math.ceil(value + i + (i * (self.quality-50)))
+      end
+      if self.itemType == v then
+        value = math.ceil(value + i + (i * (self.quality-50)))
+      end
+    end
+  end
+  self.value = value
+      
 end
 function item.getAdjective(quality)
   local adj = {}

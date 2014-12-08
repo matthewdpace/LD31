@@ -43,6 +43,8 @@ function love.load(arg)
   
   NPCText.enabled = false
   NPCText.text = "This is just a test message"
+  
+  math.randomseed(os.time())
 end
 
 
