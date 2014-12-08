@@ -13,11 +13,10 @@ states = require('state')
 
 
 currentDay = {}
-currentHero = {}
 heroSellingQueue = {}
 heroBuyingQueue = {}
 heroList = {}
-
+heroQueue = {}
 NPCText = {}
 
 
@@ -52,14 +51,16 @@ end
 
 function generateDay()
   -- generate number of heroes who will shop today
-  currentDay.heroCnt = math.random(5)
-  
+  for i=1, math.random(10) do
+    table.insert(heroQueue, getOrGenerateHero())
   -- see if there's any events today
+  end
 end
+
 
 function getOrGenerateHero()
   local availHeroes = {}
-  
+  local currentHero
   for _,v in ipairs(heroList) do
     if v.isAvailable then
       table.insert(availHeroes, v)
@@ -73,6 +74,7 @@ function getOrGenerateHero()
   end
   local params = {}
   currentHero = hero.new(params)
+  return currentHero
 end
 
 function love.draw()

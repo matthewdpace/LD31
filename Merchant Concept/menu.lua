@@ -88,7 +88,7 @@ menu.heroSell = { {active = false, text = "Buy Item!", coords={50, 600}, process
                 }
 
 
-menu.heroBuy = { {active = false, text = "Sell Item!", coords={50, 600}, process =function() Menu:buyItem() end },
+menu.heroBuy = { {active = false, text = "Sell Item!", coords={50, 600}, process =function() Menu:sellItem() end },
                   {active = false, text = "Next Customer!", coords={200, 600}, process = function()States:goNext() end},
                   {active = false, text = "Negotiate an offer", coords={350, 600}}
                     
@@ -177,10 +177,6 @@ function menu:processBuyKey(key)
       menu.heroSell[i+1].active = true
     end
   end
-
-
-
-
   if (key == 'return') or (key == 'kpenter') then
     for k,v in ipairs(menu.heroSell) do
       if v.active then
@@ -204,14 +200,18 @@ function menu:processBuyKey(key)
     end
   end
 end
-function menu:buyMenu()
+
+
+
+
+function menu:sellMenu()
   -- Loot for sale
-  if #heroSellingQueue > 0 then
+  if #heroBuyingQueue > 0 then
     love.graphics.setFont(menu.menuFont)
     love.graphics.setColor(menu.menuColor)
-    love.graphics.print("G'day, I would like to sell my " .. heroSellingQueue[self.heroSellingIDX].descriptor .. ' '.. heroSellingQueue[self.heroSellingIDX].material .. ' ' .. heroSellingQueue[self.heroSellingIDX].itemType, 30, 520)
-    love.graphics.print("I am willing to part with this fine treasure for only " .. 
-      heroSellingQueue[self.heroSellingIDX].value .. " gold", 30, 550)
+    love.graphics.print("G'day, I would like to see what you have for sale", 30, 520)
+    love.graphics.print("I am willing to offer " .. 
+      heroBuyingQueue[self.heroBuyingIDX].value .. " gold", 30, 550)
     
     -- Player's options
     for _,v in ipairs(menu.heroSell) do
@@ -227,13 +227,13 @@ function menu:buyMenu()
   else
     love.graphics.setFont(menu.menuFont)
     love.graphics.setColor(menu.menuColor)
-    love.graphics.print("I don't have anything else to sell to you", 30, 520)
+    love.graphics.print("You do not have anything else I want to buy", 30, 520)
     love.graphics.setColor(unpack(menu.activeColor))
     love.graphics.setFont(menu.activeFont)
     menu.heroSell[2].active = true
     menu.heroSell[1].active = false
     menu.heroSell[3].active = false
-    love.graphics.print(menu.heroSell[2].text, menu.heroSell[2].coords[1], menu.heroSell[2].coords[2])
+    love.graphics.print(menu.heroBuy[2].text, menu.heroBuy[2].coords[1], menu.heroBuy[2].coords[2])
   end
   self:drawHUD()
 end

@@ -60,7 +60,7 @@ end
 function greetState.exit()
 end
 function greetState.draw()
-  Menu:heroGreet(currentHero.greeting)
+  Menu:heroGreet(heroQueue[1].greeting)
 end
 
 
@@ -70,7 +70,7 @@ local buyState = { id = 5,
                   }
 function buyState.enter()
   Menu.heroSellingIDX = 1
-  currentHero:sellLoot()
+  heroQueue[1]:sellLoot()
 end
 function buyState.exit()
 end
@@ -79,13 +79,22 @@ function buyState.draw()
 end
 
 local sellState = { id = 6,
-      nextState = 5
+      nextState = 4
     }
 function sellState.enter()
+  
   Menu.heroBuyingIDX = 1
-  currentHero:sellLoot()
+  heroQueue[1]:sellLoot()
 end
 function sellState.exit()
+  -- if it's teh last hero start a new day
+  if #heroQueue == 1 then
+    sellState.nextState = 3
+  else
+    sellState.nextState = 4
+  end
+  
+  table.remove(heroQueue, 1)
 end
 function sellState.draw()
   Menu:sellMenu()
