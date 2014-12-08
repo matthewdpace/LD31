@@ -17,7 +17,7 @@ function menu.new()
   
 
 
-  s.sellIndex = 1
+  s.heroSellingIDX = 1
   s.active = false
   s.curmenuItems = {}
   s.curAction = ''
@@ -71,11 +71,11 @@ end
 
 function menu:buyItem()
   -- CHANGE: Asking price
-  if Shop.wealth >= sellQueue[self.sellIndex].value then
-    Shop.wealth = Shop.wealth - sellQueue[self.sellIndex].value
-    table.insert(Shop.inventory, table.remove(sellQueue, self.sellIndex))
+  if Shop.wealth >= heroSellingQueue[self.heroSellingIDX].value then
+    Shop.wealth = Shop.wealth - heroSellingQueue[self.heroSellingIDX].value
+    table.insert(Shop.inventory, table.remove(heroSellingQueue, self.heroSellingIDX))
   end
---  if #sellQueue < 1 then
+--  if #heroSellingQueue < 1 then
 --    return States:goNext()
 --  end
   
@@ -102,12 +102,12 @@ menu.pause.quit = {active = false, text = "Quit Game", coords={50, 600}}
 
 function menu:buyMenu()
   -- Loot for sale
-  if #sellQueue > 0 then
+  if #heroSellingQueue > 0 then
     love.graphics.setFont(menu.menuFont)
     love.graphics.setColor(menu.menuColor)
-    love.graphics.print("G'day, I would like to sell my " .. sellQueue[self.sellIndex].descriptor .. ' '.. sellQueue[self.sellIndex].material .. ' ' .. sellQueue[self.sellIndex].itemType, 30, 520)
+    love.graphics.print("G'day, I would like to sell my " .. heroSellingQueue[self.heroSellingIDX].descriptor .. ' '.. heroSellingQueue[self.heroSellingIDX].material .. ' ' .. heroSellingQueue[self.heroSellingIDX].itemType, 30, 520)
     love.graphics.print("I am willing to part with this fine treasure for only " .. 
-      sellQueue[self.sellIndex].value .. " gold", 30, 550)
+      heroSellingQueue[self.heroSellingIDX].value .. " gold", 30, 550)
     
     -- Player's options
     for _,v in ipairs(menu.heroSell) do
@@ -190,28 +190,28 @@ function menu:processBuyKey(key)
   end
   
   if (key == 'up') or (key == 'w') or (key == 'np8') then
-    if Menu.sellIndex == 1 then
-      Menu.sellIndex = #sellQueue
+    if Menu.heroSellingIDX == 1 then
+      Menu.heroSellingIDX = #heroSellingQueue
     else
-      Menu.sellIndex = Menu.sellIndex - 1
+      Menu.heroSellingIDX = Menu.heroSellingIDX - 1
     end
   end
   if (key == 'down') or (key == 's') or (key == 'kp2') then
-    if Menu.sellIndex == #sellQueue then
-      Menu.sellIndex = 1
+    if Menu.heroSellingIDX == #heroSellingQueue then
+      Menu.heroSellingIDX = 1
     else
-      Menu.sellIndex = Menu.sellIndex + 1
+      Menu.heroSellingIDX = Menu.heroSellingIDX + 1
     end
   end
 end
 function menu:buyMenu()
   -- Loot for sale
-  if #sellQueue > 0 then
+  if #heroSellingQueue > 0 then
     love.graphics.setFont(menu.menuFont)
     love.graphics.setColor(menu.menuColor)
-    love.graphics.print("G'day, I would like to sell my " .. sellQueue[self.sellIndex].descriptor .. ' '.. sellQueue[self.sellIndex].material .. ' ' .. sellQueue[self.sellIndex].itemType, 30, 520)
+    love.graphics.print("G'day, I would like to sell my " .. heroSellingQueue[self.heroSellingIDX].descriptor .. ' '.. heroSellingQueue[self.heroSellingIDX].material .. ' ' .. heroSellingQueue[self.heroSellingIDX].itemType, 30, 520)
     love.graphics.print("I am willing to part with this fine treasure for only " .. 
-      sellQueue[self.sellIndex].value .. " gold", 30, 550)
+      heroSellingQueue[self.heroSellingIDX].value .. " gold", 30, 550)
     
     -- Player's options
     for _,v in ipairs(menu.heroSell) do
@@ -285,17 +285,17 @@ function menu:processSellKey(key)
     end
   end
   if (key == 'up') or (key == 'w') or (key == 'np8') then
-    if Menu.buyIndex == 1 then
-      Menu.buyIndex = #buyQueue
+    if Menu.heroBuyingIDX == 1 then
+      Menu.heroBuyingIDX = #heroBuyingQueue
     else
-      Menu.buyIndex = Menu.buyIndex - 1
+      Menu.heroBuyingIDX = Menu.heroBuyingIDX - 1
     end
   end
   if (key == 'down') or (key == 's') or (key == 'kp2') then
-    if Menu.buyIndex == #buyQueue then
-      Menu.buyIndex = 1
+    if Menu.heroBuyingIDX == #heroBuyingQueue then
+      Menu.heroBuyingIDX = 1
     else
-      Menu.buyIndex = Menu.buyIndex + 1
+      Menu.heroBuyingIDX = Menu.heroBuyingIDX + 1
     end
   end
 end

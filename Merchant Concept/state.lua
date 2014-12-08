@@ -69,7 +69,7 @@ local buyState = { id = 5,
                     nextState = 6
                   }
 function buyState.enter()
-  Menu.sellIndex = 1
+  Menu.heroSellingIDX = 1
   currentHero:sellLoot()
 end
 function buyState.exit()
@@ -82,7 +82,7 @@ local sellState = { id = 6,
       nextState = 5
     }
 function sellState.enter()
-  Menu.buyIndex = 1
+  Menu.heroBuyingIDX = 1
   currentHero:sellLoot()
 end
 function sellState.exit()

@@ -39,7 +39,7 @@ end
 
 function hero:sellLoot()
   for k,v in ipairs(self.loot) do
-    table.insert(sellQueue, v)
+    table.insert(heroSellingQueue, v)
   end
 end
 
