@@ -53,31 +53,11 @@ function menu:processKey(key)
   if (States.curState.id == 5) then
     menu:processBuyKey(key)
   end
-  
+  if (States.curState.id == 6) then
+    menu:processSellKey(key)
+  end
 end
   
---  if self.curAction == 'MENU' then
---    if (key == 'down') or (key == 'kp2') or (key == 's') then
---      -- process as down movement in menu
---    elseif (key == 'up') or (key == 'kp8') or (key == 'w') then
---      -- process as up movement in menu
---    elseif (key == 'enter') or (key == 'kpenter') then
---      -- process as activating menu item
---    end
---  elseif (self.curAction == 'PRICING') then
---    if (key == 'down') or (key == 'kp2') then
---      self.curPrice = self.curPrice - 1
---      -- TODO no negatives
---    elseif (key == 'up') or (key == 'kp8') then
---      self.curPrice = self.curPrice +1
---    end
---  end
-
-    
-    
-      
-    
-
 
 ----------------------------------------------------------
 --------------------Hero Interaction----------------------
@@ -95,19 +75,24 @@ function menu:buyItem()
     Shop.wealth = Shop.wealth - sellQueue[self.sellIndex].value
     table.insert(Shop.inventory, table.remove(sellQueue, self.sellIndex))
   end
-  if #sellQueue < 1 then
-    return menu:sellStuff()
-  end
+--  if #sellQueue < 1 then
+--    return States:goNext()
+--  end
   
 end
 
-menu.heroSell = { {active = false, text = "Buy Item!", coords={50, 600}, process = menu.buyItem },
-                  {active = false, text = "End buying", coords={200, 600}},
+menu.heroSell = { {active = false, text = "Buy Item!", coords={50, 600}, process =function() Menu:buyItem() end },
+                  {active = false, text = "End buying", coords={200, 600}, process = function()States:goNext() end},
                   {active = false, text = "Negotiate an offer", coords={350, 600}}
                     
                 }
 
 
+menu.heroBuy = { {active = false, text = "Sell Item!", coords={50, 600}, process =function() Menu:buyItem() end },
+                  {active = false, text = "Next Customer!", coords={200, 600}, process = function()States:goNext() end},
+                  {active = false, text = "Negotiate an offer", coords={350, 600}}
+                    
+                }
 
 
 
@@ -117,25 +102,37 @@ menu.pause.quit = {active = false, text = "Quit Game", coords={50, 600}}
 
 function menu:buyMenu()
   -- Loot for sale
-  
-  love.graphics.setFont(menu.menuFont)
-  love.graphics.setColor(menu.menuColor)
-  love.graphics.print("G'day, I would like to sell my " .. sellQueue[self.sellIndex].descriptor .. ' '.. sellQueue[self.sellIndex].material .. ' ' .. sellQueue[self.sellIndex].itemType, 30, 520)
-  love.graphics.print("I am willing to part with this fine treasure for only " .. 
-    sellQueue[self.sellIndex].value .. " gold", 30, 550)
-  
-  -- Player's options
-  for _,v in ipairs(menu.heroSell) do
-    if v.active then
-      love.graphics.setColor(unpack(menu.activeColor))
-      love.graphics.setFont(menu.activeFont)
-    else
-      love.graphics.setFont(menu.menuFont)
-      love.graphics.setColor(unpack(menu.menuColor))
+  if #sellQueue > 0 then
+    love.graphics.setFont(menu.menuFont)
+    love.graphics.setColor(menu.menuColor)
+    love.graphics.print("G'day, I would like to sell my " .. sellQueue[self.sellIndex].descriptor .. ' '.. sellQueue[self.sellIndex].material .. ' ' .. sellQueue[self.sellIndex].itemType, 30, 520)
+    love.graphics.print("I am willing to part with this fine treasure for only " .. 
+      sellQueue[self.sellIndex].value .. " gold", 30, 550)
+    
+    -- Player's options
+    for _,v in ipairs(menu.heroSell) do
+      if v.active then
+        love.graphics.setColor(unpack(menu.activeColor))
+        love.graphics.setFont(menu.activeFont)
+      else
+        love.graphics.setFont(menu.menuFont)
+        love.graphics.setColor(unpack(menu.menuColor))
+      end
+      love.graphics.print(v.text, v.coords[1], v.coords[2])
     end
-    love.graphics.print(v.text, v.coords[1], v.coords[2])
+  else
+    love.graphics.setFont(menu.menuFont)
+    love.graphics.setColor(menu.menuColor)
+    love.graphics.print("I don't have anything else to sell to you", 30, 520)
+    love.graphics.setColor(unpack(menu.activeColor))
+    love.graphics.setFont(menu.activeFont)
+    menu.heroSell[2].active = true
+    menu.heroSell[1].active = false
+    menu.heroSell[3].active = false
+    love.graphics.print(menu.heroSell[2].text, menu.heroSell[2].coords[1], menu.heroSell[2].coords[2])
   end
   
+    
   self:drawHUD()
 end
 
@@ -187,7 +184,7 @@ function menu:processBuyKey(key)
   if (key == 'return') or (key == 'kpenter') then
     for k,v in ipairs(menu.heroSell) do
       if v.active then
-        v.process(Menu)
+        v.process()
       end
     end
   end
@@ -206,11 +203,102 @@ function menu:processBuyKey(key)
       Menu.sellIndex = Menu.sellIndex + 1
     end
   end
-  
-
-
+end
+function menu:buyMenu()
+  -- Loot for sale
+  if #sellQueue > 0 then
+    love.graphics.setFont(menu.menuFont)
+    love.graphics.setColor(menu.menuColor)
+    love.graphics.print("G'day, I would like to sell my " .. sellQueue[self.sellIndex].descriptor .. ' '.. sellQueue[self.sellIndex].material .. ' ' .. sellQueue[self.sellIndex].itemType, 30, 520)
+    love.graphics.print("I am willing to part with this fine treasure for only " .. 
+      sellQueue[self.sellIndex].value .. " gold", 30, 550)
+    
+    -- Player's options
+    for _,v in ipairs(menu.heroSell) do
+      if v.active then
+        love.graphics.setColor(unpack(menu.activeColor))
+        love.graphics.setFont(menu.activeFont)
+      else
+        love.graphics.setFont(menu.menuFont)
+        love.graphics.setColor(unpack(menu.menuColor))
+      end
+      love.graphics.print(v.text, v.coords[1], v.coords[2])
+    end
+  else
+    love.graphics.setFont(menu.menuFont)
+    love.graphics.setColor(menu.menuColor)
+    love.graphics.print("I don't have anything else to sell to you", 30, 520)
+    love.graphics.setColor(unpack(menu.activeColor))
+    love.graphics.setFont(menu.activeFont)
+    menu.heroSell[2].active = true
+    menu.heroSell[1].active = false
+    menu.heroSell[3].active = false
+    love.graphics.print(menu.heroSell[2].text, menu.heroSell[2].coords[1], menu.heroSell[2].coords[2])
+  end
+  self:drawHUD()
 end
 
+function menu:processSellKey(key)
+  if (key == 'left') or (key == 'kp4') or (key == 'a') then
+    local i = 0
+    for k,v in pairs (menu.heroBuy) do
+      if v.active then
+        i = k
+        break
+      end
+    end
+    if i == 0 then
+      -- no previous selection
+      menu.heroBuy[1].active = true
+    elseif i == 1 then
+      menu.heroBuy[i].active = false
+      menu.heroBuy[#menu.heroBuy].active = true
+    else
+      menu.heroBuy[i].active = false
+      menu.heroBuy[i-1].active = true
+    end
+  end
+  if (key == 'right') or (key == 'kp6') or (key == 'd') then
+    local i = 0
+    for k,v in pairs (menu.heroBuy) do
+      if v.active then
+        i = k
+        break
+      end
+    end
+    if i == 0 then
+      -- no previous selection
+      menu.heroBuy[1].active = true
+    elseif i == #menu.heroBuy then
+      menu.heroBuy[i].active = false
+      menu.heroBuy[1].active = true
+    else
+      menu.heroBuy[i].active = false
+      menu.heroBuy[i+1].active = true
+    end
+  end
+  if (key == 'return') or (key == 'kpenter') then
+    for k,v in ipairs(menu.heroBuy) do
+      if v.active then
+        v.process()
+      end
+    end
+  end
+  if (key == 'up') or (key == 'w') or (key == 'np8') then
+    if Menu.buyIndex == 1 then
+      Menu.buyIndex = #buyQueue
+    else
+      Menu.buyIndex = Menu.buyIndex - 1
+    end
+  end
+  if (key == 'down') or (key == 's') or (key == 'kp2') then
+    if Menu.buyIndex == #buyQueue then
+      Menu.buyIndex = 1
+    else
+      Menu.buyIndex = Menu.buyIndex + 1
+    end
+  end
+end
 
 ----------------------------------------------------------
 -----------------------Main menu--------------------------
