@@ -38,7 +38,10 @@ function Hero:checkWants(storeInventory)
 end
 
 function Hero:sellLoot()
-for k,v in ipairs(
+for k,v in ipairs(self.loot) do
+  table.insert(sellQueue, v)
+end
+
 
 end
 

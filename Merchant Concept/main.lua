@@ -14,7 +14,8 @@ StatesM = require('states')
 
 currentDay = {}
 currentHero = {}
-currentLootForSale = {}
+sellQueue = {}
+buyQueue = {}
 heroList = {}
 
 NPCText = {}

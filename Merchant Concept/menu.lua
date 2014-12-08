@@ -17,7 +17,7 @@ function Menu.new()
   
 
 
-  
+  s.sellIndex = 1
   s.active = false
   s.curMenuItems = {}
   s.curAction = ''
@@ -102,6 +102,12 @@ Menu.pause.resume = {active = false, text = "Resume Game", coords={50, 600}}
 Menu.pause.quit = {active = false, text = "Quit Game", coords={50, 600}}
 
 function Menu:barterMenu()
+  -- Loot for sale
+  love.graphics.setFont(Menu.menuFont)
+  love.graphics.setColor(Menu.menuColor)
+  love.graphics.print("G'day, I would like to sell my " .. sellQueue[self.sellIndex].material .. ' ' .. sellQueue[self.sellIndex].itemType, 30, 520)
+  
+  -- Player's options
   for _,v in ipairs(Menu.heroSell) do
     if v.active then
       love.graphics.setColor(unpack(Menu.activeColor))
@@ -182,7 +188,7 @@ end
 ----------------------------------------------------------
 
 function Menu:intro()
-  local introText = "Welcome to Untitled game, a Ludum Dare 31 entry.    You play the role of a merchant, buying, selling, and trading wares with the heroic adventurers that wander through your town.$#%^^&&**()!"
+  local introText = "Welcome to Dungeons and Margins IX: Financial Fantasy, a Ludum Dare 31 entry.    You play the role of a merchant, buying, selling, and trading wares with the heroic adventurers that wander through your town.$#%^^&&**()!"
   love.graphics.setFont(self.menuFont)
   love.graphics.setColor(unpack(self.menuColor))
   love.graphics.printf(introText, 20, 520, 1240, 'left')
