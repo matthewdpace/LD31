@@ -14,10 +14,16 @@ StatesM = require('states')
 
 currentDay = {}
 currentHero = {}
-
+currentLootForSale = {}
 heroList = {}
 
 NPCText = {}
+
+States = StatesM.new()
+Menu = MenuM.new()
+Shop = ShopM.new()
+Heroes = HeroesM.new()
+
 
 function love.load(arg)
 
@@ -25,10 +31,10 @@ function love.load(arg)
     require("mobdebug").start() 
   end
 
-States = StatesM.new()
-Menu = MenuM.new()
-Shop = ShopM.new()
+
   love.graphics.setBackgroundColor(120,120,120)
+  bgImage = love.graphics.newImage('Merchant Built Stall Test_resized.png')
+  
   newsTitleFont = love.graphics.newFont('IHATCS__.ttf', 42)
   newsTextFont = love.graphics.newFont('IHATCS__.ttf', 24)
   
@@ -60,29 +66,20 @@ function getOrGenerateHero()
   end
   local params = {}
   currentHero = Heroes.new(params)
-  MODE = "GREET"
 end
 
 function love.draw()
   ---- Draw Basic Background
   love.graphics.clear()
-  love.graphics.setColor(0,0,0,200)
-  love.graphics.rectangle('fill', 0,500, 1280, 500)
   love.graphics.setColor(220,220,220)
   love.graphics.setLineWidth(3)
+  love.graphics.draw(bgImage, 0,0)
   love.graphics.line(0, 500, 1280, 500)  
+  love.graphics.setColor(0,0,0,220)
+ 
+  love.graphics.rectangle('fill', 0,500, 1280, 500)
+  
   States:drawCurrentState()
-  if MODE == "NEWDAY" then
-    -- display news
-    -- draw newspaper
-    love.graphics.setColor(200,200,200)
-    love.graphics.rectangle('fill', 230,30,500,400)
-    love.graphics.setColor(10,10,10)
-    love.graphics.setFont(newsTitleFont)
-    love.graphics.printf("Townie News", 220, 80, 600, 'center')
-    love.graphics.setFont(newsTextFont)
-    love.graphics.print("Some shit went down and some people got killed", 250, 120)
-  end
   
   -- text box
 
@@ -106,25 +103,33 @@ end
 
 
 
-function love.keyreleased(key, u)
-  if key == "return" or key == "kpenter" then
-    if MODE == "INTRO" then
-      MODE = "NEWDAY"
-      generateDay()
-      textFunction = Text.pressEnter
+function love.keyreleased(key)
+  if key == 'escape' then
+    love.event.quit()
+  end
+  
+  Menu:processKey(key)
+end
+
+
+--  if key == "return" or key == "kpenter" then
+--    if MODE == "INTRO" then
+--      MODE = "NEWDAY"
+--      generateDay()
+--      textFunction = Text.pressEnter
     
-    elseif MODE == "NEWDAY" then
-      MODE = "GREET"
-      textFunction = Text.none
-      getOrGenerateHero()
-      -- generate a hero to use
-    elseif MODE == "GREET" then
-      MODE = "PLAY"
+--    elseif MODE == "NEWDAY" then
+--      MODE = "GREET"
+--      textFunction = Text.none
+--      getOrGenerateHero()
+--      -- generate a hero to use
+--    elseif MODE == "GREET" then
+--      MODE = "PLAY"
 
   
-  elseif MODE == "PLAY" then
-    Menu:processKey(key)
-  end
+--  elseif MODE == "PLAY" then
+--    Menu:processKey(key)
+--  end
   
-  end
-end
+--  end
+--end

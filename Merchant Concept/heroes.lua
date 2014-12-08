@@ -6,7 +6,8 @@ Items = require ('items')
 local Hero = {}
 
 
-function Hero.new(params) 
+function Hero.new(params)
+  params = params or {}
   local s = {}
   s.name = "Hero McHeroson"
   s.greeting = "Hello, do you have any skooma?  I need to stay up all night to create a game"
@@ -18,6 +19,7 @@ function Hero.new(params)
   s.friendRating = params.friendRating or math.random(-100, 100)
   
   s.equipment = Items.generateInventory(params)
+  s.loot = Items.generateLoot(params)
   
   setmetatable(s, {__index = Hero})
   
@@ -35,6 +37,9 @@ function Hero:checkWants(storeInventory)
   end
 end
 
+function Hero:sellLoot()
+for k,v in ipairs(
 
+end
 
 return Hero
