@@ -2,13 +2,13 @@
 
 
 
-ItemsM = require('items')
-HeroesM = require('heroes')
-ShopM = require('shop')
-EventsM = require('events')
-MenuM = require('menu')
+item = require('item')
+hero = require('hero')
+shop = require('shop')
+events = require('event')
+menu = require('menu')
 --Text = require ('text')
-StatesM = require('states')
+states = require('state')
 
 
 
@@ -20,17 +20,19 @@ heroList = {}
 
 NPCText = {}
 
-States = StatesM.new()
-Menu = MenuM.new()
-Shop = ShopM.new()
-Heroes = HeroesM.new()
-
+Menu = {}
+Shop = {}
+States = {}
 
 function love.load(arg)
 
   if arg[#arg] == "-debug" then 
     require("mobdebug").start() 
   end
+  States = states.new()
+  Menu = menu.new()
+  Shop = shop.new()
+  --Heroes = hero.new()
 
 
   love.graphics.setBackgroundColor(120,120,120)
@@ -66,7 +68,7 @@ function getOrGenerateHero()
     end
   end
   local params = {}
-  currentHero = Heroes.new(params)
+  currentHero = hero.new(params)
 end
 
 function love.draw()

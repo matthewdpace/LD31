@@ -2,11 +2,11 @@
 
 -- manages the actual storefront / player
 
-local Shop = {}
+local shop = {}
 
-function Shop.new()
+function shop.new()
   local s = {}
-  setmetatable(s, {__index = Shop})
+  setmetatable(s, {__index = shop})
   
   s.wealth = 100
   s.freeSpace = 120
@@ -18,4 +18,4 @@ function Shop.new()
   return s
 end
 
-return Shop
+return shop
