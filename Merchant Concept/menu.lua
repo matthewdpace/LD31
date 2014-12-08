@@ -105,7 +105,7 @@ function menu:barterMenu()
   -- Loot for sale
   love.graphics.setFont(menu.menuFont)
   love.graphics.setColor(menu.menuColor)
-  love.graphics.print("G'day, I would like to sell my " .. sellQueue[self.sellIndex].material .. ' ' .. sellQueue[self.sellIndex].itemType, 30, 520)
+  love.graphics.print("G'day, I would like to sell my " .. sellQueue[self.sellIndex].descriptor .. ' '.. sellQueue[self.sellIndex].material .. ' ' .. sellQueue[self.sellIndex].itemType, 30, 520)
   love.graphics.print("I am willing to part with this fine treasure for only 20 gold", 30, 550)
   
   -- Player's options
