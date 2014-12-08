@@ -19,7 +19,7 @@ function item.new()
   s.material = ''
   s.quality = math.random(100)
   s.descriptor = item.getAdjective(s.quality)
-  s:calcValue()
+  
 
   return s
 end
@@ -28,32 +28,34 @@ end
 
 function item:calcValue()
   -- these table names are base gold values
-  local five = {'trinket', 'tourist crap', 'leather'}
-  local ten = {'talisman', 'goblet', 'trophy', 'copper', 'tin', 'health', 'mana', 'boots', 'gloves'}
-  local twenty = {'crossbow', 'hammer', 'head', 'crown', 'amulet', 'ring', 'scepter', '"abstract" sculpture', 'head', 'legs', 'restoration'}
-  local thirty = {'mace', 'axe', 'bow', 'iron', 'bronze', 'shield'}
-  local fourty = {'torso', 'sword', 'steel'}
-  local fifty = {'unobtanium'}
-  
+
   local value = 0
-  
+  --local qfactor = (self.quality - 50) * math.random()
   local values = {}
-  values[5] = five
-  values[10] = ten
-  values[20] = twenty
-  values[30] = thirty
-  values[40] = fourty
-  values[50] = fifty
+  local found = {false, false}  
+  values[5] =  {'trinket', 'tourist crap', 'leather'}
+  values[10] =  {'talisman', 'goblet', 'trophy', 'copper', 'tin', 'health', 'mana', 'boots', 'gloves'}
+  values[20] = {'crossbow', 'hammer', 'head', 'crown', 'amulet', 'ring', 'scepter', '"abstract" sculpture', 'head', 'legs', 'restoration'}
+  values[30] = {'mace', 'axe', 'bow', 'iron', 'bronze', 'shield'}
+  values[40] = {'torso', 'sword', 'steel'}
+  values[50] = {'unobtanium'}
   for i,j in pairs(values) do
     for k,v in pairs(j) do
       if self.material == v then
-        value = math.ceil(value + i + (i * (self.quality-50)))
+        value = value + math.ceil(i * self.quality/100)
+        found[1] = true
       end
       if self.itemType == v then
-        value = math.ceil(value + i + (i * (self.quality-50)))
+        value = value + math.ceil(i * self.quality/100)
+        found[2] = true
       end
+      if found[1] and found[2] then
+        goto continue
+      end
+      
     end
   end
+  ::continue::
   self.value = value
       
 end
@@ -106,10 +108,15 @@ end
 function item.generateLoot(params)
   params = params or {}
   local loot = {}
+  --[[ Debug shit
+  local loot = {}
+  
+  --]]
   for i=1, math.random(10) do
     local k = item.new()
     k.itemType = item.loot[math.random(#item.loot)]
     k.material = item.weaponMaterials[math.random(#item.weaponMaterials)]
+    k:calcValue()
     table.insert(loot, k)
   end
   return loot

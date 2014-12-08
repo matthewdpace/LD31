@@ -9,7 +9,7 @@ local items = require('item')
 function hero.new(params)
   params = params or {}
   local s = {}
-  s.name = "Hero McHeroson"
+  s.name = hero.generateName()
   s.greeting = "Hello, do you have any skooma?  I need to stay up all night to create a game"
   
   s.notoriety = params.notoriety or math.random(100)
@@ -38,11 +38,15 @@ function hero:checkWants(storeInventory)
 end
 
 function hero:sellLoot()
-for k,v in ipairs(self.loot) do
-  table.insert(sellQueue, v)
+  for k,v in ipairs(self.loot) do
+    table.insert(sellQueue, v)
+  end
 end
 
-
+function hero.generateName()
+  local firstNames = {'Jarah', 'Ansha', 'Ealric', 'Jackord', 'Briege', 'Joric', 'Elwin', 'Annye', 'Zelda', 'Link', 'Aryll', 'Ajani', 'Chandra', 'Jace', 'Ashiok', 'Urza', 'Dusty', 'Charbri', 'Acia', 'Laueli', 'Hieldigel', 'Rolhal'}
+  local lastNames = {'Bowsheep', 'Walkerhame', 'Landermace', 'Forcefury', 'Duskbrave', 'Hiltcarver', 'Goldmane', 'Thrune', 'Bravelord', 'Seasword', 'Plainsblood', 'Rockcarry', 'Bornesword', 'Fallmight', 'Oakenshield', 'Castleraid', 'Nighthawk', 'Woodsmash', 'Windstaff', 'Black', 'Smith', 'Silver'}
+  return firstNames[math.random(#firstNames)] .. ' ' .. lastNames[math.random(#lastNames)]
 end
 
 return hero

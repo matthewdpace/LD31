@@ -36,6 +36,12 @@ function menu:pressEnter()
 end
 
 
+function menu:drawHUD()
+  love.graphics.setFont(self.menuFont)
+  love.graphics.setColor(unpack(self.menuColor))
+  love.graphics.printf(Shop.wealth .. " Gold avail", 900, 550, 360, 'right')
+  love.graphics.printf(Shop.freeSpace .. " Space avail", 900, 585, 360, 'right')
+end
 
 
 function menu:processKey(key)
@@ -45,7 +51,7 @@ function menu:processKey(key)
     end
   end
   if (States.curState.id == 5) then
-    menu:processBarterKey(key)
+    menu:processBuyKey(key)
   end
   
 end
@@ -83,25 +89,33 @@ function menu:heroGreet(greeting)
 end
 
 
-menu.heroSell = { {active = false, text = "Buy Item!", coords={50, 600}, process =buyItem},
+function menu:buyItem()
+  -- CHANGE: Asking price
+  if Shop.wealth >= sellQueue[self.sellIndex].value then
+    Shop.wealth = Shop.wealth - sellQueue[self.sellIndex].value
+    table.insert(Shop.inventory, table.remove(sellQueue, self.sellIndex))
+  end
+  if #sellQueue < 1 then
+    return menu:sellStuff()
+  end
+  
+end
+
+menu.heroSell = { {active = false, text = "Buy Item!", coords={50, 600}, process = menu.buyItem },
                   {active = false, text = "End buying", coords={200, 600}},
                   {active = false, text = "Negotiate an offer", coords={350, 600}}
                     
                 }
 
--- Functions for processing hero selling functionality
-local buyItem = function ()
-  -- remove the item from inventory
-  -- add the item to the player's store inventory
-  -- move gold from player to hero
-end
+
+
 
 
 menu.pause = {}
 menu.pause.resume = {active = false, text = "Resume Game", coords={50, 600}}
 menu.pause.quit = {active = false, text = "Quit Game", coords={50, 600}}
 
-function menu:barterMenu()
+function menu:buyMenu()
   -- Loot for sale
   
   love.graphics.setFont(menu.menuFont)
@@ -121,9 +135,11 @@ function menu:barterMenu()
     end
     love.graphics.print(v.text, v.coords[1], v.coords[2])
   end
+  
+  self:drawHUD()
 end
 
-function menu:processBarterKey(key)
+function menu:processBuyKey(key)
   if (key == 'left') or (key == 'kp4') or (key == 'a') then
     local i = 0
     for k,v in pairs (menu.heroSell) do
@@ -171,7 +187,7 @@ function menu:processBarterKey(key)
   if (key == 'return') or (key == 'kpenter') then
     for k,v in ipairs(menu.heroSell) do
       if v.active then
-        v.process()
+        v.process(Menu)
       end
     end
   end

@@ -65,23 +65,35 @@ end
 
 
 
-local barterState = { id = 5,
+local buyState = { id = 5,
                     nextState = 6
                   }
-function barterState.enter()
+function buyState.enter()
   Menu.sellIndex = 1
   currentHero:sellLoot()
 end
-function barterState.exit()
+function buyState.exit()
 end
-function barterState.draw()
-  Menu:barterMenu()
+function buyState.draw()
+  Menu:buyMenu()
 end
 
-                  
+local sellState = { id = 6,
+      nextState = 5
+    }
+function sellState.enter()
+  Menu.buyIndex = 1
+  currentHero:sellLoot()
+end
+function sellState.exit()
+end
+function sellState.draw()
+  Menu:sellMenu()
+end
+    
 
 
-stateList = { splashState, introState, newsState, greetState, barterState, }
+stateList = { splashState, introState, newsState, greetState, buyState, sellState}
 local states = {}
 
 function states.new()

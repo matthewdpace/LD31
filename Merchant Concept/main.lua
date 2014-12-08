@@ -20,8 +20,9 @@ heroList = {}
 
 NPCText = {}
 
-Menu = {}
+
 Shop = {}
+Menu = {}
 States = {}
 
 function love.load(arg)
@@ -30,8 +31,9 @@ function love.load(arg)
     require("mobdebug").start() 
   end
   States = states.new()
-  Menu = menu.new()
   Shop = shop.new()
+  
+  Menu = menu.new()
   --Heroes = hero.new()
 
 
@@ -84,23 +86,19 @@ function love.draw()
  
   love.graphics.rectangle('fill', 0,500, 1280, 500)
   
+  
+  
   States:drawCurrentState()
   
-  -- text box
 
-  --love.graphics.setFont(menuFont)
-  --love.graphics.setColor(220,220,220)
-  --love.graphics.printf(displayText, 20, 520, 1240, 'left')
-  --textFunction()
-
-    -- NPC text box
-  if NPCText.enabled then
-    love.graphics.setFont(menuFont)
-    love.graphics.setColor(120,120,120, 10)
-    love.graphics.rectangle('fill',700, 200, 850, 350)
-    love.graphics.setColor(200,200,200)
-    love.graphics.print(NPCText.text, 760,210)
-  end
+--    -- NPC text box
+--  if NPCText.enabled then
+--    love.graphics.setFont(menuFont)
+--    love.graphics.setColor(120,120,120, 10)
+--    love.graphics.rectangle('fill',700, 200, 850, 350)
+--    love.graphics.setColor(200,200,200)
+--    love.graphics.print(NPCText.text, 760,210)
+--  end
   
 end
 
@@ -115,6 +113,13 @@ function love.keyreleased(key)
   
   Menu:processKey(key)
 end
+
+
+--------------------------------------------------------------------
+-------------------- Global functions ------------------------------
+--------------------------------------------------------------------
+
+  
 
 
 --  if key == "return" or key == "kpenter" then
