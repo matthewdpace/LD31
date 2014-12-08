@@ -26,6 +26,15 @@ function hero.new(params)
   return s
   
 end
+function hero:calculatePrice(item)
+  local v = item.value
+  if item.itemType == self.lootPref then
+    local pref = math.ceil(v/2)
+    v = v + math.random(pref)
+  end
+  v = v - self.friendRating
+  return v
+end
 
 function hero:createBuyList()
   heroBuyingQueue = {}

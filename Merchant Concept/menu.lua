@@ -97,16 +97,29 @@ function menu:sellItem()
   heroQueue[1]:createBuyList()
 end
 
+function negotiateHeroBuy()
+  
+  
+end
+
+function negotiateHeroSell()
+  
+  
+end
+
+
 menu.heroSell = { {active = false, text = "Buy Item!", coords={50, 600}, process =function() Menu:buyItem() end },
                   {active = false, text = "End buying", coords={200, 600}, process = function()States:goNext() end},
-                  {active = false, text = "Negotiate an offer", coords={350, 600}}
+                  {active = false, text = "Negotiate an offer", coords={350, 600}, process = function() negotiateHeroSell() end}
                     
                 }
 
 
+
+
 menu.heroBuy = { {active = false, text = "Sell Item!", coords={50, 600}, process =function() Menu:sellItem() end },
                   {active = false, text = "Next Customer!", coords={200, 600}, process = function()States:goNext() end},
-                  {active = false, text = "Negotiate an offer", coords={420, 600}, process = function() print('you shouldnt be here') end}
+                  {active = false, text = "Negotiate an offer", coords={420, 600}, process = function() negotiateHeroBuy() end}
                     
                 }
 
