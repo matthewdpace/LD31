@@ -17,7 +17,8 @@ function hero.new(params)
   s.weaponPrefs = params.weaponPrefs or math.random(#item.weapons)
   s.friendRating = params.friendRating or math.random(-100, 100)
   s.lootPref = items.loot[math.random(#items.loot)]
-  s.equipment = item.generateInventory(params)
+  
+  s.equipment = item.generateInventory(params) or {}
   s.loot = item.generateLoot(params)
   
   setmetatable(s, {__index = hero})
@@ -26,11 +27,23 @@ function hero.new(params)
   
 end
 
+function hero:createBuyList()
+  heroBuyingQueue = {}
+  local wants = self:checkWants()
+  for k,v in ipairs(wants) do
+    for i,j in ipairs(Shop.inventory) do
+      if v == j.itemType then
+        table.insert(heroBuyingQueue, j)
+      end
+    end
+  end
+end
+
 function hero:checkWants(storeInventory)
   local required = {}
   for _,v in ipairs(items.armor) do
     local found = false
-    for _, u in ipairs(s.equipment) do
+    for _, u in ipairs(self.equipment) do
       if u.type == v then
         found = true
         break

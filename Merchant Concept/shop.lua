@@ -3,6 +3,7 @@
 -- manages the actual storefront / player
 
 local shop = {}
+items = require('item')
 
 function shop.new()
   local s = {}
@@ -12,7 +13,7 @@ function shop.new()
   s.freeSpace = 120
   s.notoriety = 10
   s.townOpinion = 30
-  s.inventory = {}
+  s.inventory = item.generateShopInventory(20)
   
   
   return s
