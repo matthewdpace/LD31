@@ -16,14 +16,7 @@ heroBuyingIDX = 1
 function menu.new()
   local s = {}
   setmetatable(s, {__index = menu})
-
-  
-
-
-
-
   return s
-  
 end
 
 
@@ -31,14 +24,19 @@ end
 --------------------General Purpose-----------------------
 ----------------------------------------------------------
 function menu:adjustPrice()
-  heroQueue[1]:calculatePrice(heroSellingQueue[heroSellingIDX])
+  if heroSellingQueue[heroSellingIDX] then
+    heroQueue[1]:calculatePrice(heroSellingQueue[heroSellingIDX])
+  end
+  if heroBuyingQueue[heroBuyingIDX] then
+      heroQueue[1]:calculatePrice(heroBuyingQueue[heroBuyingIDX])
+  end
 end
 
 
 function menu:pressEnter()
   love.graphics.setFont(self.menuFont)
   love.graphics.setColor(unpack(self.activeColor))
-  love.graphics.printf('Press [Enter] to continue!', 600, 580, 620, 'center')
+  love.graphics.printf('Press [Enter] to continue!', 500, 640, 280, 'center')
 end
 
 
@@ -81,35 +79,40 @@ end
 function menu:buyItem()
   -- CHANGE: Asking price
   if Shop.wealth >= heroSellingQueue[heroSellingIDX].value then
-    Shop.wealth = Shop.wealth - heroSellingQueue[heroSellingIDX].value
+    Shop.wealth = Shop.wealth - curHeroItemSellPrice
     table.insert(Shop.inventory, table.remove(heroSellingQueue, heroSellingIDX))
+    heroQueue[1].friendRating = heroQueue[1].friendRating + math.random(7)
+    heroSellingIDX = 1
     self:adjustPrice()
+
   end
 end
 function menu:sellItem()
   table.insert(heroQueue[1].equipment, heroBuyingQueue[heroBuyingIDX])
-  Shop.wealth = Shop.wealth + heroBuyingQueue[heroBuyingIDX].value
+  Shop.wealth = Shop.wealth + curHeroItemBuyPrice
   for k,v in ipairs(Shop.inventory) do
     if v == heroBuyingQueue[heroBuyingIDX] then
       table.remove(Shop.inventory, k)
+      table.remove(heroBuyingQueue, heroBuyingIDX)
       break
     end
-    self:adjustPrice()
   end
+  if #heroBuyingQueue < 1 then
+    States:goNext()
+    return
+  end
+  
+    heroQueue[1].friendRating = heroQueue[1].friendRating + math.random(7)
+    heroBuyingIDX = 1
+    self:adjustPrice()
 end
 
-function negotiateHeroBuy()
-  curHeroItemBuyPrice = curHeroItemBuyPrice + math.random(math.floor(curHeroItemBuyPrice/5)) 
-end
 
-function negotiateHeroSell()
-  curHeroItemSellPrice = curHeroItemSellPrice - math.random(math.floor(curHeroItemSellPrice/5)) 
-end
 
 
 menu.heroSell = { {active = false, text = "Buy Item!", coords={50, 600}, process =function() Menu:buyItem() end },
-                  {active = false, text = "End buying", coords={200, 600}, process = function()States:goNext() end},
-                  {active = false, text = "Negotiate an offer", coords={350, 600}, process = function() negotiateHeroSell() end}
+                  {active = false, text = "End buying", coords={200, 600}, process = function() States:goNext() end},
+                  {active = false, text = "Negotiate an offer", coords={350, 600}, process = function() heroQueue[1]:negotiateLower() end}
                     
                 }
 
@@ -119,9 +122,7 @@ menu.heroSell = { {active = false, text = "Buy Item!", coords={50, 600}, process
 menu.heroBuy = { {active = false, text = "Sell Item!", coords={50, 600}, process =function() Menu:sellItem() end },
                   {active = false, text = "Next Customer!", coords={200, 600}, process = function()States:goNext() end},
 
-                  {active = false, text = "Negotiate an offer", coords={420, 600}, process = function() negotiateHeroBuy() end}
-
-                    
+                  {active = false, text = "Negotiate an offer", coords={420, 600}, process = function() heroQueue[1]:negotiateHigher() end}
                 }
 
 
@@ -131,7 +132,6 @@ menu.pause.resume = {active = false, text = "Resume Game", coords={50, 600}}
 menu.pause.quit = {active = false, text = "Quit Game", coords={50, 600}}
 
 function menu:buyMenu()
-  
   -- Loot for sale
   if #heroSellingQueue > 0 then
     love.graphics.setFont(menu.menuFont)
@@ -242,6 +242,7 @@ function menu:sellMenu()
   
   -- Loot for sale
   if #heroBuyingQueue > 0 then
+    
     love.graphics.setFont(menu.menuFont)
     love.graphics.setColor(menu.menuColor)
     love.graphics.print("G'day, I would like to see what you have for sale", 30, 520)
@@ -339,6 +340,24 @@ function menu:processSellKey(key)
   end
 end
 
+
+function menu:displayName()
+  love.graphics.setColor(menu.menuColor)
+  love.graphics.setFont(menu.menuFont)
+  
+  local stat = " :-D"
+  if heroQueue[1].patience < 5 then
+    stat = " :-)"
+  end
+if heroQueue[1].patience < 4 then
+    stat = " :-|"
+  end
+  if heroQueue[1].patience < 2 then
+    stat = " :-("
+  end
+  love.graphics.printf(heroQueue[1].name .. stat, 700, 500, 400, 'right')
+end
+
 ----------------------------------------------------------
 -----------------------Main menu--------------------------
 ----------------------------------------------------------
@@ -351,11 +370,11 @@ end
 ----------------------------------------------------------
 
 function menu:intro()
-  local introText = "Welcome to Dungeons and Margins VII: Financial Fantasy, a Ludum Dare 31 entry.    You play the role of a merchant, buying, selling, and trading wares with the heroic adventurers that wander through your town."
+  local introText = "Welcome to Dungeons and Margins VII: Financial Fantasy, a Ludum Dare 31 entry.  You play the role of a merchant, buying, selling, and trading wares with the heroic adventurers that wander through your town.\n\nUse the arrow keys, WASD, or numpad to navigate.  Up/Down scrolls items, left/right selects menu options.  Keep track of which adventurers shop with you, how you treat them, and their shopping preferences for maximum profits!"
   love.graphics.setFont(self.menuFont)
   love.graphics.setColor(unpack(self.menuColor))
-  love.graphics.printf(introText, 20, 520, 1240, 'left')
-  love.graphics.printf('Press [Enter] to begin!', 20, 580, 620, 'center')
+  love.graphics.printf(introText, 20, 510, 1240, 'left')
+  Menu:pressEnter()
 
 end
 

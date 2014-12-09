@@ -20,7 +20,9 @@ NPCText = {}
 Shop = {}
 Menu = {}
 States = {}
-
+  
+splashImage = love.graphics.newImage("Splash Screen.png")
+titleImage = love.graphics.newImage("Title screen.png")
 function love.load(arg)
 
   if arg[#arg] == "-debug" then 
@@ -28,11 +30,11 @@ function love.load(arg)
   end
   States = states.new()
   Shop = shop.new()
-  
+
   Menu = menu.new()
   --Heroes = hero.new()
   love.graphics.setBackgroundColor(120,120,120)
-  bgImage = love.graphics.newImage('Merchant Built Stall Test_resized.png')
+  bgImage = love.graphics.newImage('Merchant Stall Complete with Gilded Knight_resized.png')
   
   newsTitleFont = love.graphics.newFont('IHATCS__.ttf', 42)
   newsTextFont = love.graphics.newFont('IHATCS__.ttf', 24)
@@ -71,14 +73,20 @@ end
 
 function love.draw()
   ---- Draw Basic Background
+  love.graphics.setColor(255,255,255)
   love.graphics.clear()
+  
+  if States.curState.id > 1 then
+    
   love.graphics.setColor(220,220,220)
   love.graphics.setLineWidth(3)
   love.graphics.draw(bgImage, 0,0)
   love.graphics.line(0, 500, 1280, 500)  
   love.graphics.setColor(0,0,0,220)
   love.graphics.rectangle('fill', 0,500, 1280, 500)
-  States:drawCurrentState()
+  
+end
+States:drawCurrentState()
 end
 
 

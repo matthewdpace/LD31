@@ -4,22 +4,42 @@
 
 
 
-local splashState = { id = 1,
-                      nextState = 2,
+local splashState = { id = 0,
+                      nextState = 1,
                     }
 function splashState.enter()
-  -- load splash screen
 end
+function splashState.draw()
+  love.graphics.draw(splashImage, 0,0)
+  Menu:pressEnter()
+end
+
 function splashState.exit()
   -- unload splash screen
+  splashImage = nil
 end
+local titleState = { id = 1,
+                      nextState = 2,
+                    }
+function titleState.enter()
+end
+function titleState.draw()
+  love.graphics.draw(titleImage, 0,0)
+  Menu:pressEnter()
+end
+
+function titleState.exit()
+  -- unload splash screen
+  titleImage = nil
+end
+
 
 
 local introState = { id = 2,
                      nextState = 3,
                    }
 function introState.enter()
-  --l load intro state
+  
 end
 function introState.exit()
   -- unload intro state
@@ -27,6 +47,7 @@ function introState.exit()
 end
 function introState.draw()
   Menu:intro()
+  Menu:pressEnter()
 end
                    
 local newsState = { id = 3,
@@ -49,13 +70,14 @@ function newsState.draw()
   love.graphics.setFont(newsTitleFont)
   love.graphics.printf("Townie News", 220, 80, 600, 'center')
   love.graphics.setFont(newsTextFont)
-  love.graphics.print("Some shit went down and some people got killed", 250, 120)
+  love.graphics.print("\n\nBreaking: Tired game devs leave half\nimplemented features.  Townsfolk confused.\nMore on page 7", 250, 120)
 end
 
 local greetState = { id = 4,
                     nextState = 5
                   }
 function greetState.enter()
+  heroQueue[1].patience = 7
 end
 function greetState.exit()
 end
@@ -76,6 +98,7 @@ end
 function buyState.exit()
 end
 function buyState.draw()
+  Menu:displayName()
   Menu:buyMenu()
 end
 
@@ -109,12 +132,13 @@ function sellState.exit()
   table.remove(heroQueue, 1)
 end
 function sellState.draw()
+  Menu:displayName()
   Menu:sellMenu()
 end
     
 
 
-stateList = { splashState, introState, newsState, greetState, buyState, sellState}
+stateList = { splashState, titleState, introState, newsState, greetState, buyState, sellState}
 local states = {}
 
 function states.new()
@@ -123,8 +147,8 @@ function states.new()
   
   -- TODO: splash screen
   --s.curState = splashState
-  s.curState = stateList[2]
-
+  s.curState = stateList[1]
+  
   return s
 end
 
