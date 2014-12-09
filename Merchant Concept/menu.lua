@@ -18,9 +18,9 @@ function menu.new()
 
 
   s.heroSellingIDX = 1
-  s.active = false
-  s.curmenuItems = {}
-  s.curAction = ''
+  s.heroBuyingIDX = 1
+
+
   return s
   
 end
@@ -29,6 +29,16 @@ end
 ----------------------------------------------------------
 --------------------General Purpose-----------------------
 ----------------------------------------------------------
+function menu:adjustPrice()
+  if States.curState.id == 5 then
+    heroQueue[1]:calculatePrice(heroSellingQueue[self.heroSellingIDX])
+  elseif States.curState.id == 6 then
+    heroQueue[1]:calculatePrice(heroBuyingQueue[self.heroBuyingIDX])
+  end
+end
+
+
+
 function menu:pressEnter()
   love.graphics.setFont(self.menuFont)
   love.graphics.setColor(unpack(self.activeColor))
@@ -98,13 +108,11 @@ function menu:sellItem()
 end
 
 function negotiateHeroBuy()
-  
-  
+  curHeroItemBuyPrice = curHeroItemBuyPrice + math.random(math.floor(curHeroItemBuyPrice/5)) 
 end
 
 function negotiateHeroSell()
-  
-  
+  curHeroItemSellPrice = curHeroItemSellPrice - math.random(math.floor(curHeroItemSellPrice/5)) 
 end
 
 
@@ -130,13 +138,14 @@ menu.pause.resume = {active = false, text = "Resume Game", coords={50, 600}}
 menu.pause.quit = {active = false, text = "Quit Game", coords={50, 600}}
 
 function menu:buyMenu()
+  
   -- Loot for sale
   if #heroSellingQueue > 0 then
     love.graphics.setFont(menu.menuFont)
     love.graphics.setColor(menu.menuColor)
     love.graphics.print("G'day, I would like to sell my " .. heroSellingQueue[self.heroSellingIDX].descriptor .. ' '.. heroSellingQueue[self.heroSellingIDX].material .. ' ' .. heroSellingQueue[self.heroSellingIDX].itemType, 30, 520)
     love.graphics.print("I am willing to part with this fine treasure for only " .. 
-      heroSellingQueue[self.heroSellingIDX].value .. " gold", 30, 550)
+      curHeroItemSellPrice .. " gold", 30, 550)
     
     -- Player's options
     for _,v in ipairs(menu.heroSell) do
@@ -220,6 +229,7 @@ function menu:processBuyKey(key)
     else
       Menu.heroSellingIDX = Menu.heroSellingIDX - 1
     end
+    self:adjustPrice()
   end
   if (key == 'down') or (key == 's') or (key == 'kp2') then
     if Menu.heroSellingIDX == #heroSellingQueue then
@@ -227,6 +237,7 @@ function menu:processBuyKey(key)
     else
       Menu.heroSellingIDX = Menu.heroSellingIDX + 1
     end
+    self:adjustPrice()
   end
 end
 
@@ -234,12 +245,13 @@ end
 
 
 function menu:sellMenu()
+  
   -- Loot for sale
   if #heroBuyingQueue > 0 then
     love.graphics.setFont(menu.menuFont)
     love.graphics.setColor(menu.menuColor)
     love.graphics.print("G'day, I would like to see what you have for sale", 30, 520)
-    love.graphics.print("I like this " .. heroBuyingQueue[self.heroBuyingIDX].descriptor .. ' ' .. heroBuyingQueue[self.heroBuyingIDX].material .. ' ' .. heroBuyingQueue[self.heroBuyingIDX].itemType ..'.  I am willing to offer ' .. heroBuyingQueue[self.heroBuyingIDX].value .. " gold", 30, 550)
+    love.graphics.print("I like this " .. heroBuyingQueue[self.heroBuyingIDX].descriptor .. ' ' .. heroBuyingQueue[self.heroBuyingIDX].material .. ' ' .. heroBuyingQueue[self.heroBuyingIDX].itemType ..'.  I am willing to offer ' .. curHeroItemBuyPrice .. " gold", 30, 550)
     
     -- Player's options
     for _,v in ipairs(menu.heroBuy) do
@@ -318,6 +330,7 @@ function menu:processSellKey(key)
     else
       Menu.heroBuyingIDX = Menu.heroBuyingIDX - 1
     end
+    self:adjustPrice()
   end
   if (key == 'down') or (key == 's') or (key == 'kp2') then
     if Menu.heroBuyingIDX == #heroBuyingQueue then
@@ -325,6 +338,7 @@ function menu:processSellKey(key)
     else
       Menu.heroBuyingIDX = Menu.heroBuyingIDX + 1
     end
+    self:adjustPrice()
   end
 end
 

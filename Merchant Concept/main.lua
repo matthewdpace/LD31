@@ -10,15 +10,12 @@ menu = require('menu')
 --Text = require ('text')
 states = require('state')
 
-
-
 currentDay = {}
 heroSellingQueue = {}
 heroBuyingQueue = {}
 heroList = {}
 heroQueue = {}
 NPCText = {}
-
 
 Shop = {}
 Menu = {}
@@ -34,17 +31,12 @@ function love.load(arg)
   
   Menu = menu.new()
   --Heroes = hero.new()
-
-
   love.graphics.setBackgroundColor(120,120,120)
   bgImage = love.graphics.newImage('Merchant Built Stall Test_resized.png')
   
   newsTitleFont = love.graphics.newFont('IHATCS__.ttf', 42)
   newsTextFont = love.graphics.newFont('IHATCS__.ttf', 24)
-  
-  NPCText.enabled = false
-  NPCText.text = "This is just a test message"
-  
+
   math.randomseed(os.time())
 end
 
@@ -85,23 +77,8 @@ function love.draw()
   love.graphics.draw(bgImage, 0,0)
   love.graphics.line(0, 500, 1280, 500)  
   love.graphics.setColor(0,0,0,220)
- 
   love.graphics.rectangle('fill', 0,500, 1280, 500)
-  
-  
-  
   States:drawCurrentState()
-  
-
---    -- NPC text box
---  if NPCText.enabled then
---    love.graphics.setFont(menuFont)
---    love.graphics.setColor(120,120,120, 10)
---    love.graphics.rectangle('fill',700, 200, 850, 350)
---    love.graphics.setColor(200,200,200)
---    love.graphics.print(NPCText.text, 760,210)
---  end
-  
 end
 
 

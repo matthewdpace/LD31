@@ -32,8 +32,8 @@ function hero:calculatePrice(item)
     local pref = math.ceil(v/2)
     v = v + math.random(pref)
   end
-  v = v - self.friendRating
-  return v
+  curHeroItemBuyPrice = v + math.floor(self.friendRating/4)
+  curHeroItemSellPrice = v - math.floor(self.friendRating/4)
 end
 
 function hero:createBuyList()
@@ -48,7 +48,7 @@ function hero:createBuyList()
   end
 end
 
-function hero:checkWants(storeInventory)
+function hero:checkWants()
   local required = {}
   for _,v in ipairs(items.armor) do
     local found = false
@@ -61,12 +61,13 @@ function hero:checkWants(storeInventory)
     if not found then
       table.insert(required, v)
     end
-    
+    table.insert(required, self.lootPref)
   end
   return required
 end
 
 function hero:sellLoot()
+  heroSellingQueue = {}
   for k,v in ipairs(self.loot) do
     table.insert(heroSellingQueue, v)
   end

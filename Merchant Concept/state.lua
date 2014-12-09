@@ -71,6 +71,7 @@ local buyState = { id = 5,
 function buyState.enter()
   Menu.heroSellingIDX = 1
   heroQueue[1]:sellLoot()
+  Menu:adjustPrice()
 end
 function buyState.exit()
 end
@@ -85,8 +86,19 @@ function sellState.enter()
   
   Menu.heroBuyingIDX = 1
   heroQueue[1]:createBuyList()
+  Menu:adjustPrice()
 end
 function sellState.exit()
+  -- recycle heroes
+  heroQueue[1].isAvailable = true
+  for _,v in ipairs(heroList) do
+    if v == heroQueue[1] then
+      goto continue
+    end
+  end
+  table.insert(heroList, heroQueue[1])
+  ::continue::
+  
   -- if it's teh last hero start a new day
   if #heroQueue < 2 then
     sellState.nextState = 3
@@ -111,6 +123,7 @@ function states.new()
   -- TODO: splash screen
   --s.curState = splashState
   s.curState = stateList[2]
+
   return s
 end
 
