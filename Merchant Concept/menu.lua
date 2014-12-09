@@ -38,7 +38,7 @@ end
 function menu:pressEnter()
   love.graphics.setFont(self.menuFont)
   love.graphics.setColor(unpack(self.activeColor))
-  love.graphics.printf('Press [Enter] to continue!', 600, 650, 420, 'center')
+  love.graphics.printf('Press [Enter] to continue!', 600, 580, 620, 'center')
 end
 
 
@@ -54,16 +54,13 @@ function menu:processKey(key)
   if (States.curState.id < 5) then
     if (key == 'return' or key == 'kpenter') then
       States:goNext()
-      return
     end
   end
   if (States.curState.id == 5) then
     menu:processBuyKey(key)
-    return
   end
   if (States.curState.id == 6) then
     menu:processSellKey(key)
-    return
   end
 end
   
@@ -71,9 +68,9 @@ end
 ----------------------------------------------------------
 --------------------Hero Interaction----------------------
 ----------------------------------------------------------
-function menu:heroGreet()
+function menu:heroGreet(greeting)
   love.graphics.setColor(unpack(menu.menuColor))
-  love.graphics.printf(heroQueue[1].name .. ':\n\n ' .. heroQueue[1].greeting,20, 520, 1240, 'left')
+  love.graphics.printf(greeting, 20, 520, 1240, 'left')
   menu:pressEnter()
 end
 
@@ -87,20 +84,7 @@ function menu:buyItem()
 --  if #heroSellingQueue < 1 then
 --    return States:goNext()
 --  end
-end
-
-function menu:sellItem()
-  table.insert(heroQueue[1].equipment, heroBuyingQueue[self.heroBuyingIDX])
-  Shop.wealth = Shop.wealth + heroBuyingQueue[self.heroBuyingIDX].value
-  for k,v in ipairs(Shop.inventory) do
-    if v == heroBuyingQueue[self.heroBuyingIDX] then
-      table.remove(Shop.inventory, k)
-      break
-    end
-  end
   
-  --prevent the hero from buying ALL OF THE GODDAMN HELMETS
-  heroQueue[1]:createBuyList()
 end
 
 function negotiateHeroBuy()
@@ -123,7 +107,9 @@ menu.heroSell = { {active = false, text = "Buy Item!", coords={50, 600}, process
 
 menu.heroBuy = { {active = false, text = "Sell Item!", coords={50, 600}, process =function() Menu:sellItem() end },
                   {active = false, text = "Next Customer!", coords={200, 600}, process = function()States:goNext() end},
+
                   {active = false, text = "Negotiate an offer", coords={420, 600}, process = function() negotiateHeroBuy() end}
+
                     
                 }
 
@@ -247,10 +233,12 @@ function menu:sellMenu()
     love.graphics.setFont(menu.menuFont)
     love.graphics.setColor(menu.menuColor)
     love.graphics.print("G'day, I would like to see what you have for sale", 30, 520)
+
     love.graphics.print("I like this " .. heroBuyingQueue[self.heroBuyingIDX].descriptor .. ' ' .. heroBuyingQueue[self.heroBuyingIDX].material .. ' ' .. heroBuyingQueue[self.heroBuyingIDX].itemType ..'.  I am willing to offer ' .. curHeroItemBuyPrice .. " gold", 30, 550)
+
     
     -- Player's options
-    for _,v in ipairs(menu.heroBuy) do
+    for _,v in ipairs(menu.heroSell) do
       if v.active then
         love.graphics.setColor(unpack(menu.activeColor))
         love.graphics.setFont(menu.activeFont)
@@ -266,9 +254,9 @@ function menu:sellMenu()
     love.graphics.print("You do not have anything else I want to buy", 30, 520)
     love.graphics.setColor(unpack(menu.activeColor))
     love.graphics.setFont(menu.activeFont)
-    menu.heroBuy[2].active = true
-    menu.heroBuy[1].active = false
-    menu.heroBuy[3].active = false
+    menu.heroSell[2].active = true
+    menu.heroSell[1].active = false
+    menu.heroSell[3].active = false
     love.graphics.print(menu.heroBuy[2].text, menu.heroBuy[2].coords[1], menu.heroBuy[2].coords[2])
   end
   self:drawHUD()
@@ -350,7 +338,7 @@ end
 ----------------------------------------------------------
 
 function menu:intro()
-  local introText = "Welcome to Dungeons and Margins VII: Financial Fantasy, a Ludum Dare 31 entry.    You play the role of a merchant, buying, selling, and trading wares with the heroic adventurers that wander through your town. \n\n\n Controls: \nLeft/Right/Enter to select options, Up/Down to scroll items to buy and sell. You may also use the numpad or WASD keys"
+  local introText = "Welcome to Dungeons and Margins IX: Financial Fantasy, a Ludum Dare 31 entry.    You play the role of a merchant, buying, selling, and trading wares with the heroic adventurers that wander through your town."
   love.graphics.setFont(self.menuFont)
   love.graphics.setColor(unpack(self.menuColor))
   love.graphics.printf(introText, 20, 520, 1240, 'left')

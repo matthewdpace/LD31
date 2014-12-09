@@ -17,8 +17,7 @@ function hero.new(params)
   s.weaponPrefs = params.weaponPrefs or math.random(#item.weapons)
   s.friendRating = params.friendRating or math.random(-100, 100)
   s.lootPref = items.loot[math.random(#items.loot)]
-  
-  s.equipment = item.generateInventory(params) or {}
+  s.equipment = item.generateInventory(params)
   s.loot = item.generateLoot(params)
   
   setmetatable(s, {__index = hero})
@@ -52,7 +51,7 @@ function hero:checkWants()
   local required = {}
   for _,v in ipairs(items.armor) do
     local found = false
-    for _, u in ipairs(self.equipment) do
+    for _, u in ipairs(s.equipment) do
       if u.type == v then
         found = true
         break

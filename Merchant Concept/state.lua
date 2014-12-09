@@ -40,7 +40,7 @@ function newsState.exit()
   -- unload newsState
   -- generate the day
   generateDay()
-  --getOrGenerateHero()
+  getOrGenerateHero()
 end
 function newsState.draw()
   love.graphics.setColor(200,200,200)
@@ -60,7 +60,7 @@ end
 function greetState.exit()
 end
 function greetState.draw()
-  Menu:heroGreet()
+  Menu:heroGreet(heroQueue[1].greeting)
 end
 
 
@@ -84,10 +84,11 @@ local sellState = { id = 6,
     }
 function sellState.enter()
   
+
   heroBuyingIDX = 1
   heroQueue[1]:createBuyList()
   Menu:adjustPrice()
-end
+
 function sellState.exit()
   -- recycle heroes
   heroQueue[1].isAvailable = true
@@ -100,11 +101,12 @@ function sellState.exit()
   ::continue::
   
   -- if it's teh last hero start a new day
-  if #heroQueue < 2 then
+  if #heroQueue == 1 then
     sellState.nextState = 3
   else
     sellState.nextState = 4
   end
+  
   table.remove(heroQueue, 1)
 end
 function sellState.draw()
