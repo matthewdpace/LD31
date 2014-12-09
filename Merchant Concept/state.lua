@@ -69,7 +69,7 @@ local buyState = { id = 5,
                     nextState = 6
                   }
 function buyState.enter()
-  Menu.heroSellingIDX = 1
+  heroSellingIDX = 1
   heroQueue[1]:sellLoot()
   Menu:adjustPrice()
 end
@@ -84,7 +84,7 @@ local sellState = { id = 6,
     }
 function sellState.enter()
   
-  Menu.heroBuyingIDX = 1
+  heroBuyingIDX = 1
   heroQueue[1]:createBuyList()
   Menu:adjustPrice()
 end

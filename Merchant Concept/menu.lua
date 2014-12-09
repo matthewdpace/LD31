@@ -9,6 +9,9 @@ local menu = {
   activeFont = love.graphics.newFont('Triforce.ttf', 32)  
   }
 
+heroSellingIDX = 1
+heroBuyingIDX = 1
+
 
 function menu.new()
   local s = {}
@@ -17,8 +20,6 @@ function menu.new()
   
 
 
-  s.heroSellingIDX = 1
-  s.heroBuyingIDX = 1
 
 
   return s
@@ -30,13 +31,8 @@ end
 --------------------General Purpose-----------------------
 ----------------------------------------------------------
 function menu:adjustPrice()
-  if States.curState.id == 5 then
-    heroQueue[1]:calculatePrice(heroSellingQueue[self.heroSellingIDX])
-  elseif States.curState.id == 6 then
-    heroQueue[1]:calculatePrice(heroBuyingQueue[self.heroBuyingIDX])
-  end
+  heroQueue[1]:calculatePrice(heroSellingQueue[self.heroSellingIDX])
 end
-
 
 
 function menu:pressEnter()
@@ -224,20 +220,20 @@ function menu:processBuyKey(key)
   end
   
   if (key == 'up') or (key == 'w') or (key == 'np8') then
-    if Menu.heroSellingIDX == 1 then
-      Menu.heroSellingIDX = #heroSellingQueue
+    if heroSellingIDX == 1 then
+      heroSellingIDX = #heroSellingQueue
     else
-      Menu.heroSellingIDX = Menu.heroSellingIDX - 1
+      heroSellingIDX = heroSellingIDX - 1
     end
-    self:adjustPrice()
+    self:adjustPrice(heroSellingQueue[heroSellingIDX])
   end
   if (key == 'down') or (key == 's') or (key == 'kp2') then
-    if Menu.heroSellingIDX == #heroSellingQueue then
-      Menu.heroSellingIDX = 1
+    if heroSellingIDX == #heroSellingQueue then
+      heroSellingIDX = 1
     else
-      Menu.heroSellingIDX = Menu.heroSellingIDX + 1
+      heroSellingIDX = heroSellingIDX + 1
     end
-    self:adjustPrice()
+    self:adjustPrice(heroSellingQueue[heroSellingIDX])
   end
 end
 
@@ -325,20 +321,20 @@ function menu:processSellKey(key)
     end
   end
   if (key == 'up') or (key == 'w') or (key == 'np8') then
-    if Menu.heroBuyingIDX == 1 then
-      Menu.heroBuyingIDX = #heroBuyingQueue
+    if heroBuyingIDX == 1 then
+      heroBuyingIDX = #heroBuyingQueue
     else
-      Menu.heroBuyingIDX = Menu.heroBuyingIDX - 1
+      heroBuyingIDX = heroBuyingIDX - 1
     end
-    self:adjustPrice()
+    self:adjustPrice(heroBuyingQueue[heroBuyingIDX])
   end
   if (key == 'down') or (key == 's') or (key == 'kp2') then
-    if Menu.heroBuyingIDX == #heroBuyingQueue then
-      Menu.heroBuyingIDX = 1
+    if heroBuyingIDX == #heroBuyingQueue then
+      heroBuyingIDX = 1
     else
-      Menu.heroBuyingIDX = Menu.heroBuyingIDX + 1
+      heroBuyingIDX = heroBuyingIDX + 1
     end
-    self:adjustPrice()
+    self:adjustPrice(heroBuyingQueue[heroBuyingIDX])
   end
 end
 
