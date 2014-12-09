@@ -103,7 +103,7 @@ function item.generateInventory(params)
     chest.material = item.armorMaterials[math.random(#item.armorMaterials)]
     i.chest = chest
   end
-
+  return i
 end
 function item.generateLoot(params)
   params = params or {}
@@ -112,15 +112,53 @@ function item.generateLoot(params)
   local loot = {}
   
   --]]
-  for i=1, math.random(10) do
+  for i=1, math.random(7) do
     local k = item.new()
     k.itemType = item.loot[math.random(#item.loot)]
     k.material = item.weaponMaterials[math.random(#item.weaponMaterials)]
     k:calcValue()
     table.insert(loot, k)
   end
+    for i=1, math.random(3) do
+    local k = item.new()
+    k.itemType = item.armor[math.random(#item.armor)]
+    k.material = item.armorMaterials[math.random(#item.armorMaterials)]
+    k:calcValue()
+    table.insert(loot, k)
+  end
+    for i=1, math.random(3) do
+    local k = item.new()
+    k.itemType = item.weapons[math.random(#item.weapons)]
+    k.material = item.weaponMaterials[math.random(#item.weaponMaterials)]
+    k:calcValue()
+    table.insert(loot, k)
+  end
   return loot
 end
-
+function item.generateShopInventory(count)
+  local items = {}
+  local x = {}
+  for i=1, count do
+    x = item.new()
+    x.itemType = item.weapons[math.random(#item.weapons)]
+    x.material = item.weaponMaterials[math.random(#item.weaponMaterials)]
+    x:calcValue()
+    table.insert(items, x)
+  end
+    for i=1, count do
+    x = item.new()
+    x.itemType = item.armor[math.random(#item.armor)]
+    x.material = item.armorMaterials[math.random(#item.armorMaterials)]
+    x:calcValue()
+    table.insert(items, x)
+  end
+  for i=1, count do
+    x = item.new()
+    x.itemType = item.potionTypes[math.random(#item.potionTypes)]
+    x:calcValue()
+    table.insert(items, x)
+  end
+  return items
+end
     
 return item

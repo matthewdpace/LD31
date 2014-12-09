@@ -83,11 +83,10 @@ local sellState = { id = 6,
       nextState = 4
     }
 function sellState.enter()
-  
-
   heroBuyingIDX = 1
   heroQueue[1]:createBuyList()
   Menu:adjustPrice()
+end
 
 function sellState.exit()
   -- recycle heroes

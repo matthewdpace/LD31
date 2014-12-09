@@ -12,7 +12,7 @@ function shop.new()
   s.freeSpace = 120
   s.notoriety = 10
   s.townOpinion = 30
-  s.inventory = {}
+  s.inventory = item.generateShopInventory(20)
   
   
   return s

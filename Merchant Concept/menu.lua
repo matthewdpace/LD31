@@ -31,7 +31,7 @@ end
 --------------------General Purpose-----------------------
 ----------------------------------------------------------
 function menu:adjustPrice()
-  heroQueue[1]:calculatePrice(heroSellingQueue[self.heroSellingIDX])
+  heroQueue[1]:calculatePrice(heroSellingQueue[heroSellingIDX])
 end
 
 
@@ -54,13 +54,16 @@ function menu:processKey(key)
   if (States.curState.id < 5) then
     if (key == 'return' or key == 'kpenter') then
       States:goNext()
+      return
     end
   end
   if (States.curState.id == 5) then
     menu:processBuyKey(key)
+    return
   end
   if (States.curState.id == 6) then
     menu:processSellKey(key)
+    return
   end
 end
   
@@ -77,14 +80,22 @@ end
 
 function menu:buyItem()
   -- CHANGE: Asking price
-  if Shop.wealth >= heroSellingQueue[self.heroSellingIDX].value then
-    Shop.wealth = Shop.wealth - heroSellingQueue[self.heroSellingIDX].value
-    table.insert(Shop.inventory, table.remove(heroSellingQueue, self.heroSellingIDX))
+  if Shop.wealth >= heroSellingQueue[heroSellingIDX].value then
+    Shop.wealth = Shop.wealth - heroSellingQueue[heroSellingIDX].value
+    table.insert(Shop.inventory, table.remove(heroSellingQueue, heroSellingIDX))
+    self:adjustPrice()
   end
---  if #heroSellingQueue < 1 then
---    return States:goNext()
---  end
-  
+end
+function menu:sellItem()
+  table.insert(heroQueue[1].equipment, heroBuyingQueue[heroBuyingIDX])
+  Shop.wealth = Shop.wealth + heroBuyingQueue[heroBuyingIDX].value
+  for k,v in ipairs(Shop.inventory) do
+    if v == heroBuyingQueue[heroBuyingIDX] then
+      table.remove(Shop.inventory, k)
+      break
+    end
+    self:adjustPrice()
+  end
 end
 
 function negotiateHeroBuy()
@@ -125,7 +136,7 @@ function menu:buyMenu()
   if #heroSellingQueue > 0 then
     love.graphics.setFont(menu.menuFont)
     love.graphics.setColor(menu.menuColor)
-    love.graphics.print("G'day, I would like to sell my " .. heroSellingQueue[self.heroSellingIDX].descriptor .. ' '.. heroSellingQueue[self.heroSellingIDX].material .. ' ' .. heroSellingQueue[self.heroSellingIDX].itemType, 30, 520)
+    love.graphics.print("G'day, I would like to sell my " .. heroSellingQueue[heroSellingIDX].descriptor .. ' '.. heroSellingQueue[heroSellingIDX].material .. ' ' .. heroSellingQueue[heroSellingIDX].itemType, 30, 520)
     love.graphics.print("I am willing to part with this fine treasure for only " .. 
       curHeroItemSellPrice .. " gold", 30, 550)
     
@@ -201,6 +212,7 @@ function menu:processBuyKey(key)
     for k,v in ipairs(menu.heroSell) do
       if v.active then
         v.process()
+        return
       end
     end
   end
@@ -234,11 +246,11 @@ function menu:sellMenu()
     love.graphics.setColor(menu.menuColor)
     love.graphics.print("G'day, I would like to see what you have for sale", 30, 520)
 
-    love.graphics.print("I like this " .. heroBuyingQueue[self.heroBuyingIDX].descriptor .. ' ' .. heroBuyingQueue[self.heroBuyingIDX].material .. ' ' .. heroBuyingQueue[self.heroBuyingIDX].itemType ..'.  I am willing to offer ' .. curHeroItemBuyPrice .. " gold", 30, 550)
+    love.graphics.print("I like this " .. heroBuyingQueue[heroBuyingIDX].descriptor .. ' ' .. heroBuyingQueue[heroBuyingIDX].material .. ' ' .. heroBuyingQueue[heroBuyingIDX].itemType ..'.  I am willing to offer ' .. curHeroItemBuyPrice .. " gold", 30, 550)
 
     
     -- Player's options
-    for _,v in ipairs(menu.heroSell) do
+    for _,v in ipairs(menu.heroBuy) do
       if v.active then
         love.graphics.setColor(unpack(menu.activeColor))
         love.graphics.setFont(menu.activeFont)
@@ -254,9 +266,9 @@ function menu:sellMenu()
     love.graphics.print("You do not have anything else I want to buy", 30, 520)
     love.graphics.setColor(unpack(menu.activeColor))
     love.graphics.setFont(menu.activeFont)
-    menu.heroSell[2].active = true
-    menu.heroSell[1].active = false
-    menu.heroSell[3].active = false
+    menu.heroBuy[2].active = true
+    menu.heroBuy[1].active = false
+    menu.heroBuy[3].active = false
     love.graphics.print(menu.heroBuy[2].text, menu.heroBuy[2].coords[1], menu.heroBuy[2].coords[2])
   end
   self:drawHUD()
@@ -305,6 +317,7 @@ function menu:processSellKey(key)
     for k,v in ipairs(menu.heroBuy) do
       if v.active then
         v.process()
+        return
       end
     end
   end
@@ -338,7 +351,7 @@ end
 ----------------------------------------------------------
 
 function menu:intro()
-  local introText = "Welcome to Dungeons and Margins IX: Financial Fantasy, a Ludum Dare 31 entry.    You play the role of a merchant, buying, selling, and trading wares with the heroic adventurers that wander through your town."
+  local introText = "Welcome to Dungeons and Margins VII: Financial Fantasy, a Ludum Dare 31 entry.    You play the role of a merchant, buying, selling, and trading wares with the heroic adventurers that wander through your town."
   love.graphics.setFont(self.menuFont)
   love.graphics.setColor(unpack(self.menuColor))
   love.graphics.printf(introText, 20, 520, 1240, 'left')
